@@ -29,14 +29,25 @@ def take_command():
     return command
 
 def run_alexa():
-    command = take_command()
-    print(command)
-    if 'play' in command:
-        song = command.replace('play', '')
-        talk('Playing ' + song)
-        pywhatkit.playonyt(song)
-    elif 'time' in command:
-        time = datetime.datetime.now()
-        talk('Current time is ' + time.strftime('%I:%M %p'))
+    stop_keywords = ['stop', 'exit', 'quit']  # Add additional stop keywords here
+    while True:
+        command = take_command()
+        print(command)
+        if any(keyword in command for keyword in stop_keywords):
+            talk('Stopping Alexa')
+            break  # Break out of the loop when stop keyword is detected
+        elif 'play' in command:
+            song = command.replace('play', '')
+            talk('Playing ' + song)
+            pywhatkit.playonyt(song)
+        elif 'time' in command:
+            time = datetime.datetime.now()
+            talk('Current time is ' + time.strftime('%I:%M %p'))
+        elif 'are you single?' in command:
+            talk('I am in a relationship with wifi')
+        elif 'joke' in command:
+            talk(pyjokes.get_joke())
+        else:
+            talk('Please say the command again.')
 
 run_alexa()
